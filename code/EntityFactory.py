@@ -18,8 +18,8 @@ class EntityFactory:
                     list_bg.append(Background(f'Estrada{i}', (0, - WIN_HEIGHT)))
                 return list_bg
             case 'Player1':
-                return Player('Player1', (100,150))
+                return Player('Player1', (WIN_WIDTH / 2 - 180,WIN_HEIGHT - 140))
             case 'Player2':
-                return Player('Player2', (300,150))
+                return Player('Player2', (WIN_WIDTH / 2 + 80,WIN_HEIGHT - 140))
             case 'Enemy1':
                 return Enemy('Enemy1', (random.randint(40, WIN_HEIGHT - 40), 0 - 400))
