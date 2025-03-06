@@ -7,7 +7,8 @@ from pygame.font import Font
 from pygame.rect import Rect
 from pygame.surface import Surface
 
-from code.Const import C_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY, C_RED, EVENT_TIMEOUT, TIMEOUT_STEP, TIMEOUT_LEVEL
+from code.Const import C_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY, C_RED, EVENT_TIMEOUT, TIMEOUT_STEP, TIMEOUT_LEVEL, \
+    C_BLACK
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
 from code.EntityMediator import EntityMediator
@@ -29,7 +30,7 @@ class Level:
             player = EntityFactory.get_entity('Player2')
             player.score = player_score[1]
             self.entity_list.append(player)
-        pygame.time.set_timer(EVENT_ENEMY, 1000)
+        pygame.time.set_timer(EVENT_ENEMY, 900)
         pygame.time.set_timer(EVENT_TIMEOUT, TIMEOUT_STEP)
 
 
@@ -47,7 +48,7 @@ class Level:
                 if ent.name == 'Player1':
                     self.level_text(14, f'Player1 - health: {ent.health} | Score: {ent.score}', C_RED, (10, 35))
                 if ent.name == 'Player2':
-                    self.level_text(14, f'Player2 - health: {ent.health} | Score: {ent.score}', C_WHITE, (10, 55))
+                    self.level_text(14, f'Player2 - health: {ent.health} | Score: {ent.score}', C_BLACK, (10, 55))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
