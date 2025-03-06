@@ -7,28 +7,34 @@ from pygame.font import Font
 from pygame.rect import Rect
 from pygame.surface import Surface
 
-from code.Const import C_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY
+from code.Const import C_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY, C_RED, EVENT_TIMEOUT, TIMEOUT_STEP, TIMEOUT_LEVEL
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
 from code.EntityMediator import EntityMediator
+from code.Player import Player
 
 
 class Level:
-    def __init__(self, window: Surface, name, game_mode):
+    def __init__(self, window: Surface, name: str, game_mode: str, player_score: list[int]):
         self.window = window
         self.name = name
         self.game_mode = game_mode
         self.entity_list: list[Entity] = []
         self.entity_list.extend(EntityFactory.get_entity('Estrada'))
-        self.entity_list.append(EntityFactory.get_entity('Player1'))
-        self.timeout = 20000
+        player = EntityFactory.get_entity('Player1')
+        player.score = player_score[0]
+        self.entity_list.append(player)
+        self.timeout = TIMEOUT_LEVEL
         if game_mode in MENU_OPTION[1]:
-            self.entity_list.append(EntityFactory.get_entity('Player2'))
-        pygame.time.set_timer(EVENT_ENEMY, 4000)
+            player = EntityFactory.get_entity('Player2')
+            player.score = player_score[1]
+            self.entity_list.append(player)
+        pygame.time.set_timer(EVENT_ENEMY, 1000)
+        pygame.time.set_timer(EVENT_TIMEOUT, TIMEOUT_STEP)
 
 
 
-    def run(self):
+    def run(self, player_score: list[int]):
         pygame.mixer_music.load('./asset/Som0.mp3')
         pygame.mixer_music.play(-1)
         clock = pygame.time.Clock()
@@ -38,6 +44,10 @@ class Level:
                 self.window.blit(source=ent.surf, dest=ent.rect)
                 ent.move()
 
+                if ent.name == 'Player1':
+                    self.level_text(14, f'Player1 - health: {ent.health} | Score: {ent.score}', C_RED, (10, 35))
+                if ent.name == 'Player2':
+                    self.level_text(14, f'Player2 - health: {ent.health} | Score: {ent.score}', C_WHITE, (10, 55))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -45,8 +55,27 @@ class Level:
                     sys.exit()
                 if event.type == EVENT_ENEMY:
                     self.entity_list.append(EntityFactory.get_entity('Enemy1'))
+                if event.type == EVENT_TIMEOUT:
+                    self.timeout -= TIMEOUT_STEP
+                    if self.timeout == 0:
+                        for ent in self.entity_list:
+                            if isinstance(ent, Player) and ent.name == 'Player1':
+                                player_score[0] = ent.score
+                            if isinstance(ent, Player) and ent.name == 'Player2':
+                                player_score[1] = ent.score
+                        return True
+
+                found_player = False
+                for ent in self.entity_list:
+                    if isinstance(ent, Player):
+                        found_player = True
+
+                if not found_player:
+                    return False
+
 
             # Printed text
+
             self.level_text(14, f'{self.name} - Timeout: {self.timeout / 1000 :.1f}s', C_WHITE, (10, 5))
             self.level_text(14, f'fps: {clock.get_fps() :.0f}', C_WHITE, (10, WIN_HEIGHT - 35))
             self.level_text(14, f'entidade: {len(self.entity_list)}', C_WHITE, (10, WIN_HEIGHT - 20))

@@ -7,7 +7,7 @@ C_RED = (255, 0, 0)
 
 # E
 EVENT_ENEMY = pygame.USEREVENT + 1
-
+EVENT_TIMEOUT = pygame.USEREVENT + 2
 ENTITY_SPEED = {
     'Estrada0': 0,
     'Estrada1': 1,
@@ -19,6 +19,25 @@ ENTITY_HEALTH = {
     'Player1': 300,
     'Player2': 300,
     'Enemy1': 50,
+}
+
+ENTITY_DAMAGE = {
+    'Estrada0': 0,
+    'Estrada1': 0,
+    'Estrada2': 0,
+    'Player1': 0,
+    'Player2': 0,
+    'Enemy1': 15,
+}
+
+ENTITY_SCORE = {
+    'Estrada0': 0,
+    'Estrada1': 0,
+    'Estrada2': 0,
+    'Player1': 0,
+    'Player2': 0,
+    'Enemy1': 100,
+
 }
 
 # M
@@ -37,6 +56,10 @@ PLAYER_KEY_LEFT = {'Player1': pygame.K_LEFT,
                    'Player2': pygame.K_a}
 PLAYER_KEY_RIGHT = {'Player1': pygame.K_RIGHT,
                     'Player2': pygame.K_d}
+
+# T
+TIMEOUT_STEP = 200
+TIMEOUT_LEVEL = 20000
 
 # W
 WIN_WIDTH = 688
